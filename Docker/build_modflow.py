@@ -1,53 +1,14 @@
-from flask import Flask
-import subprocess
-import shutil
-import os
-import glob
-from hs_restclient import HydroShare, HydroShareAuthBasic
-import urllib2
-import zipfile
-from time import sleep
-import json
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Mar 31 17:19:25 2017
+
+@author: wzell
+"""
+
 import os,subprocess,fiona,shutil,rasterio,itertools
 import numpy as np
 import flopy.modflow as mf
 
-app = Flask(__name__)
-
-
-@app.route('/id/<id>')
-def runScript(id):
-    auth = HydroShareAuthBasic(username='', password='')
-    hs = HydroShare(auth=auth)
-
-    hs.getResource(id, destination='/home/ubuntu/hydroshare_app/', unzip=True)
-    subprocess.call("sudo cp " + str(id) +'/' + str(id) + '/data/contents/* /home/ubuntu/hydroshare_app/Data', shell=True)
-    subprocess.call("sudo rm -r " + str(id), shell=True)
-
-    process()
-
-    #Locate the file with the .nam extension
-    os.chdir('MODFLOW')
-    for file in glob.glob("*.nam"):
-        filename = file
-
-    # Run the model
-    subprocess.call("sudo ./mfnwt " + filename, shell=True)
-
-    try:
-        hs.deleteResourceFile(id,filename.split(".")[0]+'.list')
-    except:
-        pass
-    #Upload to hydroshare
-    hs.addResourceFile(id, filename.split(".")[0]+'.list')
-
-    subprocess.call("sudo rm /home/ubuntu/hydroshare_app/MODFLOW/*.*", shell=True)
-    subprocess.call("sudo rm -r  /home/ubuntu/hydroshare_app/Scratch", shell=True)
-    subprocess.call("sudo rm -r  /home/ubuntu/hydroshare_app/Framework", shell=True)
-    subprocess.call("sudo rm  /home/ubuntu/hydroshare_app/Data/*", shell=True)
-
-
-    return json.dumps(hs.getScienceMetadata(id))
 
 # --- SCRIPT PARAMETER SET START ---
 
@@ -226,7 +187,7 @@ class Paths(object):
 
         # Input data
         # ----------
-        self.data_dir = 'Data'
+        self.data_dir = 'workspace/Data'
 
         self.wbd_data     = os.path.join(self.data_dir,model_name + '_5070.shp')
         self.surfgeo_data = os.path.join(self.data_dir,'VA_SurficialGeology.shp')
@@ -238,7 +199,7 @@ class Paths(object):
         # system states (e.g., starting heads), and system properties
         # (e.g., hydraulic conductivity)
         # ---------------------------------------------------------------------
-        self.model_frame_dir = 'Framework'
+        self.model_frame_dir = 'workspace/Framework'
 
         # Intermediate rasters
         self.ibound_tif              = os.path.join(self.model_frame_dir,model_name + '_IBOUND.tif')
@@ -256,7 +217,7 @@ class Paths(object):
 
         # MODFLOW input files (MODFLOW refers to these as 'packages')
         # -----------------------------------------------------------
-        self.modflow_dir = 'MODFLOW'
+        self.modflow_dir = 'workspace/MODFLOW'
         self.mf_version  = 'mfnwt'
         self.mf_bat_file = os.path.join(self.modflow_dir,model_name + '.' + self.mf_version + '.bat')
 
@@ -268,7 +229,7 @@ class Paths(object):
 
         # Scratch workspace
         # -----------------
-        self.scratch_dir = 'Scratch'
+        self.scratch_dir = 'workspace/Scratch'
 
         self.dem_clipped = os.path.join(self.scratch_dir,model_name + '_temp_dem.tif')
         self.rch_clipped = os.path.join(self.scratch_dir,model_name + '_temp_rch.tif')
@@ -391,7 +352,7 @@ def build_drain_input(mfFrame=None,stages=None,condmult=1):
 
 # === HELPER FUNCTIONS AND CLASSES STOP ========
 
-def process():
+def main():
     '''
     This is the main function.
     '''
@@ -479,6 +440,4 @@ def process():
         fout.write('%s %s' %(binary_path,os.path.basename(mfPaths.nam_file)))
 
     return
-
-if __name__ == "__main__":
-    app.run(debug=True)
+main()
