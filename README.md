@@ -21,7 +21,7 @@ Setup Nginx:
 sudo /etc/init.d/nginx start
 sudo rm /etc/nginx/sites-enabled/default
 sudo touch /etc/nginx/sites-available/flask_project
-sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/flask_project```  
+sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/flask_project```    
 
 
 Then edit the config file
@@ -35,7 +35,7 @@ server {
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
   }
-}```  
+}```   
 
 Restart Nginx:
 ``` shell
