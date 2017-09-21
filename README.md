@@ -9,26 +9,21 @@ First obtain the scripts from this repository:
 ```git clone https://github.com/uva-hydroinformatics-lab/AWS_MODFLOW.git```  
 
  On a fresh ubuntu instance install nginx, python, and gunicorn:  
- ```shell
- sudo apt-get install -y python python-pip nginx gunicorn```
+ ```sudo apt-get install -y python python-pip nginx gunicorn```
 
  Install the required python packages:
- ```
- pip install flask hs_restclient numpy fiona rasterio flopy```  
+ ```pip install flask hs_restclient numpy fiona rasterio flopy```  
 
  Setup Nginx:
- ```shell
-sudo /etc/init.d/nginx start
+ ```sudo /etc/init.d/nginx start
 sudo rm /etc/nginx/sites-enabled/default
 sudo touch /etc/nginx/sites-available/flask_project
 sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/flask_project```  
 
  Then edit the config file
- ``` shell
- sudo vim /etc/nginx/sites-enabled/flask_project```  
+ ```sudo vim /etc/nginx/sites-enabled/flask_project```  
 
- ```
- server {
+ ```server {
     location / {
         proxy_pass http://localhost:8000;
         proxy_set_header Host $host;
@@ -37,12 +32,8 @@ sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/fla
 }```  
 
 Restart Nginx:
-``` shell
-sudo /etc/init.d/nginx restart
-```  
+```sudo /etc/init.d/nginx restart```  
 
 Start the scrript using gunicorn:
-```
-cd AWS_MODFLOW
-gunicorn app:app -b localhost:8000
-```  
+```cd AWS_MODFLOW
+gunicorn app:app -b localhost:8000```  
