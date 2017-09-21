@@ -21,11 +21,11 @@ Setup Nginx:
 sudo /etc/init.d/nginx start
 sudo rm /etc/nginx/sites-enabled/default
 sudo touch /etc/nginx/sites-available/flask_project
-sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/flask_project```    
+sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/flask_project ```    
 
 
 Then edit the config file
-``` shell
+```shell
 sudo vim /etc/nginx/sites-enabled/flask_project```  
 
 ```
@@ -38,12 +38,12 @@ server {
 }```   
 
 Restart Nginx:
-``` shell
+```shell
 sudo /etc/init.d/nginx restart
 ```  
 
 Start the scrript using gunicorn:
-```
+```shell
 cd AWS_MODFLOW
 gunicorn app:app -b localhost:8000
 ```  
