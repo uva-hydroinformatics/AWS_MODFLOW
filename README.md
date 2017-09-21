@@ -15,15 +15,18 @@ Install the required python packages:
 ```pip install flask hs_restclient numpy fiona rasterio flopy```  
 
 Setup Nginx:  
-```sudo /etc/init.d/nginx start
+```shell
+sudo /etc/init.d/nginx start
 sudo rm /etc/nginx/sites-enabled/default
 sudo touch /etc/nginx/sites-available/flask_project
-sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/flask_project``` 
+sudo ln -s /etc/nginx/sites-available/flask_project /etc/nginx/sites-enabled/flask_project 
+```   
 
 
 Then edit the config file
 ```shell
-sudo vim /etc/nginx/sites-enabled/flask_project```  
+sudo vim /etc/nginx/sites-enabled/flask_project
+```  
 
 ```
 server {
